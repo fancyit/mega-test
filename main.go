@@ -1,27 +1,25 @@
 package main
 
 import (
-    "encoding/json"
-    "fmt"
-    "net/http"
+	"encoding/json"
+	"hash/crc64"
+	"net/http"
 )
 
-type Pass struct {
-  InputStr string `json:"password"`  
-  HashedPass int
+type Pswd struct {
+	Phrase       string `json:"phrase"`
+	HashedPhrase uint64
 }
 
-func main() {   
-    http.HandleFunc("/decode", func(w http.ResponseWriter, r *http.Request) {
-	var pass Pass
-	json.NewDecoder(r.Body).Decode(&pass)
-        fmt.Fprintf(w, "%s", pass.InputStr)
-    })
+func main() {
+	http.HandleFunc("/get-phrase-hash", func(w http.ResponseWriter, r *http.Request) {
+		var pass Pswd
+		json.NewDecoder(r.Body).Decode(&pass)
+		crc64Table := crc64.MakeTable(0xC96C5795D7870F42)
+		crc64Int := crc64.Checksum([]byte(pass.Phrase), crc64Table)
+		pass.HashedPhrase = crc64Int
+		json.NewEncoder(w).Encode(pass)
+	})
 
-    fs := http.FileServer(http.Dir("static/"))
-    http.Handle("/static/", http.StripPrefix("/static/", fs))
-
-    http.ListenAndServe(":8081", nil)
+	http.ListenAndServe(":8081", nil)
 }
-
-
