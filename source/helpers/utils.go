@@ -17,3 +17,5 @@ func Hex2int(hexStr string) uint64 {
 	result, _ := strconv.ParseUint(hexStr, 16, 64)
 	return uint64(result)
 }
+
+//func BuildParseHash()
