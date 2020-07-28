@@ -1,34 +1,29 @@
 package main
 
 import (
-	"crypto/sha256"
-
-	"encoding/json"
-
+	c "./source/controllers"
+	m "./source/middlewares"
+	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"net/http"
-	h "./src/helpers"
+	"os"
 )
 
-type Pswd struct {
-	Phrase       string `json:"phrase"`
-	HexedS	string
-	HashedPhrase uint64
+func init() {
+	e := godotenv.Load() //Загрузить файл .env
+	if e != nil {
+		fmt.Print(e)
+	}
 }
-
 func main() {
-	http.HandleFunc("/get-phrase-hash", func(w http.ResponseWriter, r *http.Request) {
-		var pass Pswd
-		json.NewDecoder(r.Body).Decode(&pass)
-		sha256bytes := sha256.Sum256([]byte(pass.Phrase))
-		hexedStr := h.B2hex(sha256bytes[:])
-		pass.HashedPhrase = h.Hex2int(hexedStr)
-		//p := fmt.Sprintf("%s", pass.Phrase)
-		json.NewEncoder(w).Encode(Pswd{
-			pass.Phrase,
-			hexedStr,
-			pass.HashedPhrase,
-		})
-	})
-
-	http.ListenAndServe(":8081", nil)
+	port := os.Getenv("PORT")
+	router := mux.NewRouter()
+	router.Use(m.UrlCheker)
+	router.HandleFunc("/get-phrase-hash", c.MainMethod).Methods("POST")
+	if err := http.ListenAndServe(":"+port, router); nil != err {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Server listens on port: ", port)
+	}
 }
