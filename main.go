@@ -2,7 +2,6 @@ package main
 
 import (
 	c "./source/controllers"
-	m "./source/middlewares"
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -19,8 +18,11 @@ func init() {
 func main() {
 	port := os.Getenv("PORT")
 	router := mux.NewRouter()
-	router.Use(m.UrlCheker)
+	//router.Use(m.UrlCheker)
+	//staticDir := "./static"
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./source/static/")))
 	router.HandleFunc("/get-phrase-hash", c.MainMethod).Methods("POST")
+	router.HandleFunc("/get-detailed-hash", c.DetailedMethod).Methods("POST")
 	if err := http.ListenAndServe(":"+port, router); nil != err {
 		fmt.Println(err)
 	} else {

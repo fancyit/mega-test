@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"strconv"
 	"strings"
+	"unsafe"
 )
 
 // массив байт в 16-ю строку
@@ -21,4 +22,14 @@ func Hex2int(hexStr string) uint64 {
 	// base 16 for hexadecimal
 	result, _ := strconv.ParseUint(hexStr, 16, 64)
 	return uint64(result)
+
+}
+
+func ByteArrayToInt(arr []byte) int64{
+	val := int64(0)
+	var size = len(arr)
+	for i := 0 ; i < size ; i++ {
+		*(*uint8)(unsafe.Pointer(uintptr(unsafe.Pointer(&val)) + uintptr(i))) = arr[i]
+	}
+	return val
 }
