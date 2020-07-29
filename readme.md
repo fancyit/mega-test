@@ -21,4 +21,5 @@ WARNING: Ignoring http://dl-cdn.alpinelinux.org/alpine/v3.12/main/x86_64/APKINDE
 So the command to build image is:
 ```bash
  docker build . -t mega-test:v3 --network=host
- ```
+ where . - is your app path, -t <target image name>:<tag>
+```
