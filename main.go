@@ -18,11 +18,13 @@ func init() {
 func main() {
 	port := os.Getenv("PORT")
 	router := mux.NewRouter()
-	//router.Use(m.UrlCheker)
-	//staticDir := "./static"
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./source/static/")))
+	//main method
 	router.HandleFunc("/get-phrase-hash", c.MainMethod).Methods("POST")
+	// additional method with details
 	router.HandleFunc("/get-detailed-hash", c.DetailedMethod).Methods("POST")
+	//if someone tries to access throe web, will get a notification of usage
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./source/static/")))
+	//in case of errors while starting up the server
 	if err := http.ListenAndServe(":"+port, router); nil != err {
 		fmt.Println(err)
 	} else {

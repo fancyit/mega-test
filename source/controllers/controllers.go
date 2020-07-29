@@ -21,36 +21,47 @@ type DetailedHash struct {
 
 var MainMethod = func(w http.ResponseWriter, r *http.Request) {
 	var hash Hash
-	var tmpVal map[string]interface{} // проместим входящую переменную в тип мап(ключ: значение), нужный нам ключ мы знаем
+	//temporary variable to contain the req field in case it is not a string
+	var tmpVal map[string]interface{}
 	json.NewDecoder(r.Body).Decode(&tmpVal)
+	//setup encoder instance
 	encoder := json.NewEncoder(w)
 	encoder.SetEscapeHTML(false)
-	hash.Phrase = fmt.Sprintf("%v", tmpVal["phrase"]) //если на вход нам дали число(float64) - парсим его в строку
+	//in case we got not a string but a float64 or an object of any kind we will convert it to a string
+	hash.Phrase = fmt.Sprintf("%v", tmpVal["phrase"])
+	// check if we got nil with request, then response will have an error of type mismatch
 	if hash.Phrase == "<nil>" {
 		w.WriteHeader(http.StatusUnsupportedMediaType)
 		w.Header().Add("Content-Type", "application/json")
 		encoder.Encode(w)
 	} else {
-		sha256bytes := sha256.Sum256([]byte(hash.Phrase)) //получаем хэш в виде массива байт
+		//get the sha256 sum
+		sha256bytes := sha256.Sum256([]byte(hash.Phrase))
+		// convert the first 8 bytes to an int64, since int64 fits only 8*8 bits
 		hash.HashedPhrase = h.ByteArrayToInt(sha256bytes[:8])
+		//encode it to JSON response
 		encoder.Encode(&hash)
 	}
 }
+//the same as above but with couple of additional fields
 var DetailedMethod = func(w http.ResponseWriter, r *http.Request) {
 	var detailedHash DetailedHash
-	var tmpVal map[string]interface{} // проместим входящую переменную в тип мап(ключ: значение), нужный нам ключ мы знаем
+	var tmpVal map[string]interface{}
 	json.NewDecoder(r.Body).Decode(&tmpVal)
 	encoder := json.NewEncoder(w)
 	encoder.SetEscapeHTML(false)
-	detailedHash.Phrase = fmt.Sprintf("%v", tmpVal["phrase"]) //если на вход нам дали число(float64) - парсим его в строку
+	detailedHash.Phrase = fmt.Sprintf("%v", tmpVal["phrase"])
 	if detailedHash.Phrase == "<nil>" {
 		w.WriteHeader(http.StatusUnsupportedMediaType)
 		w.Header().Add("Content-Type", "application/json")
 		encoder.Encode(w)
 	} else {
-		sha256bytes := sha256.Sum256([]byte(detailedHash.Phrase)) //получаем хэш в виде массива байт
-		detailedHash.HexedPhrase = h.B2hex(sha256bytes[:])       //хексим слайс массива
+		sha256bytes := sha256.Sum256([]byte(detailedHash.Phrase))
+		//convert the checksum to hex string
+		detailedHash.HexedPhrase = h.B2hex(sha256bytes[:])
+		//the same as above but passing only first 8 bites with slice
 		detailedHash.HexedCuttedPhrase = h.B2hex(sha256bytes[:8])
+		//converting it to int64
 		detailedHash.HashedPhrase = h.ByteArrayToInt(sha256bytes[:8])
 		encoder.Encode(&detailedHash)
 	}

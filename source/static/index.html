@@ -2,13 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Guide to methods</title>
+    <title>Hash it, now!</title>
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
 <div class="container">
     <h1>Hi there ;-)</h1>
-
+    <div class="description">
+        <h3>This is an api not a web page, so it has only methods as described below:</h3>
+        <ul class="list">
+            <li> <span>get-phrase-hash</span>
+            takes a single argument which will be treated as a string, then it returns a JSON with folowing structure
+            <span>{"phrase": "","HashedPhrase": ""}</span>, where phrase is the object you passed to the method and the HashedPhrase is sha256
+            from the "phrase" trimed and converted to int64 type
+            </li>
+            <li>
+                <span>get-detailed-hash</span>
+            Same as previous but response JSON includes additional fields, such as <span>"HexedPhrase":"","HexedCuttedPhrase":""</span>
+            where HexedPhrase is sha256 sum in hex format, and HexedCuttedPhrase is trimmed HexedPhrase to fit int64
+            </li>
+        </ul>
+    </div>
 </div>
-
 </body>
 </html>

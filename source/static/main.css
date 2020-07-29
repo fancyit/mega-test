@@ -1,0 +1,19 @@
+*{
+    background-color: #f2f5f7;
+}
+.container{
+    display: flex;
+    min-width: 600px;
+    max-width: 1200px;
+    margin: auto;
+    flex-direction: column;
+}
+ul {
+    list-style-type: decimal;
+}
+li {
+    padding-bottom: 10px;
+}
+span {
+    font-weight: bold;
+}
