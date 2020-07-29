@@ -15,6 +15,10 @@ which you can use to setup docker image with the app onboard.
 For docker build command to be correctly fulfilled it is mandatory to executed with _--network=host_ option, 
 since apk add git won't pass without it.
 The reason is repo accessibilitie, so you may run into an error with text:
-```sh 
+```bash 
 WARNING: Ignoring http://dl-cdn.alpinelinux.org/alpine/v3.12/main/x86_64/APKINDEX.tar.gz: temporary error (try again later)
 ```
+So the command to build image is:
+```bash
+ docker build . -t mega-test:v3 --network=host
+ ```
