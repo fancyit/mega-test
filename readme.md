@@ -1,6 +1,6 @@
 ## This is a test web application.
 
-###### t has 2 methods:
+###### It has 2 methods:
 	1. _http://yourserverurl:8081/get-phrase-hash_
 	   it takes a single argument which will be treated as a string, then it returns a JSON with folowing structure
 	   {"phrase":,"HashedPhrase":}, where phrase is the object you passed to the method and the HashedPhrase is sha256 
