@@ -27,3 +27,7 @@ Command to run built above image is:
 ```bash
  docker run -p 80:8081 <your image name>
 ```
+###### You can pull image from dockerhub as well
+```` bash
+docker pull fancyit/mega-test:v2
+````
