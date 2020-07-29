@@ -18,8 +18,12 @@ The reason is repo accessibilitie, so you may run into an error with text:
 ```bash 
 WARNING: Ignoring http://dl-cdn.alpinelinux.org/alpine/v3.12/main/x86_64/APKINDEX.tar.gz: temporary error (try again later)
 ```
-So the command to build image is:
+Command to build image is:
 ```bash
  docker build . -t mega-test:v3 --network=host
  where . - is your app path, -t <target image name>:<tag>
+```
+Command to run built above image is:
+```bash
+ docker run -p 80:8081 <your image name>
 ```
