@@ -25,10 +25,11 @@ func Hex2int(hexStr string) uint64 {
 	return uint64(result)
 
 }
-// Byte by byte copy of given array to an int64 variable
-func ByteArrayToInt(arr []byte) int64{
+
+//ByteArrayToInt Byte by byte copy of given array to an int64 variable
+func ByteArrayToInt(arr []byte) int64 {
 	val := int64(0)
-	for i := 0 ; i < 8 ; i++ { //int64 has 8 bytes
+	for i := 0; i < 8; i++ { //int64 has 8 bytes
 		*(*uint8)(unsafe.Pointer(uintptr(unsafe.Pointer(&val)) + uintptr(i))) = arr[i]
 	}
 	return val
